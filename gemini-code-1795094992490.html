@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GREENBITE | 세계 과자 큐레이션 스토어</title>
+  <style>
+    :root {
+      --bg-white: #ffffff;
+      --bg-soft: #f6faf7;
+      --green-main: #1b6b3a;
+      --green-dark: #124a27;
+      --green-accent: #2ecc71;
+      --green-mint: #e3f5ea;
+      --text-dark: #18221c;
+      --text-muted: #5e6e64;
+      --border-light: #dfeae3;
+      --shadow-sm: 0 4px 14px rgba(27, 107, 58, 0.06);
+      --shadow-md: 0 12px 30px rgba(27, 107, 58, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-white);
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+    input, select { font-family: inherit; }
+
+    /* 상단 공지 바 */
+    .top-banner {
+      background: var(--green-main);
+      color: #fff;
+      text-align: center;
+      font-size: 13px;
+      padding: 8px 16px;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+    }
+    .top-banner span {
+      background: var(--green-accent);
+      color: var(--green-dark);
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-right: 6px;
+      font-size: 11px;
+    }
+
+    /* 헤더 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--green-main);
+      letter-spacing: -0.8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-badge {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--green-accent);
+      display: inline-block;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dark);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green-main); }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-outline {
+      border: 1.5px solid var(--green-main);
+      color: var(--green-main);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { background: var(--green-mint); }
+    .btn-primary {
+      background: var(--green-main);
+      color: #fff;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--green-dark); }
+    .member-pill {
+      background: var(--green-mint);
+      border: 1px solid #bfe3cd;
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tier-tag {
+      background: var(--green-main);
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    /* 히어로 슬라이더 */
+    .hero-section {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+    .slider-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 440px;
+      box-shadow: var(--shadow-md);
+      background: var(--bg-soft);
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.7s ease-in-out;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .slide img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    .slide-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.75) 48%, rgba(255, 255, 255, 0.05) 100%);
+      z-index: 2;
+    }
+    .slide-content {
+      position: relative;
+      z-index: 3;
+      max-width: 520px;
+      padding: 48px;
+    }
+    .slide-badge {
+      display: inline-block;
+      background: var(--green-mint);
+      color: var(--green-main);
+      font-weight: 700;
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      margin-bottom: 14px;
+    }
+    .slide-content h1 {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      letter-spacing: -0.8px;
+    }
+    .slide-content p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .slider-controls {
+      position: absolute;
+      bottom: 20px;
+      right: 28px;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 6px 12px;
+      border-radius: 99px;
+      border: 1px solid var(--border-light);
+    }
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #c7d9ce;
+      transition: all 0.3s;
+    }
+    .dot.active {
+      width: 24px;
+      border-radius: 99px;
+      background: var(--green-main);
+    }
+
+    /* 멤버십 등급 배너 섹션 */
+    .section {
+      max-width: 1200px;
+      margin: 56px auto;
+      padding: 0 24px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .section-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .tier-card {
+      background: var(--bg-soft);
+      border: 1.5px solid var(--border-light);
+      border-radius: 16px;
+      padding: 24px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .tier-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--green-main);
+    }
+    .tier-card.highlight {
+      background: #fff;
+      border: 2px solid var(--green-main);
+      box-shadow: var(--shadow-sm);
+    }
+    .tier-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--green-main);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tier-rate {
+      background: var(--green-accent);
+      color: var(--green-dark);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+    .tier-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* 국가별 필터 탭 */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border-light);
+      background: #fff;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--green-main);
+      color: #fff;
+      border-color: var(--green-main);
+    }
+
+    /* 상품 그리드 */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .product-card {
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+    .product-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: var(--bg-soft);
+      overflow: hidden;
+    }
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .product-card:hover .product-img-wrap img {
+      transform: scale(1.05);
+    }
+    .country-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+    .product-info {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .product-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .product-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+    .product-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+    }
+    .price-box .price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--green-main);
+    }
+    .price-box .point-hint {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* 모달 공통 */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 35, 24, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 460px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .modal-header h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+    .close-btn {
+      font-size: 22px;
+      color: var(--text-muted);
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border-light);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--green-main);
+    }
+
+    /* 장바구니 및 결제 리스트 */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-light);
+      gap: 12px;
+    }
+    .cart-item img {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .cart-item-info { flex-grow: 1; }
+    .cart-item-title { font-size: 14px; font-weight: 700; }
+    .cart-item-price { font-size: 13px; color: var(--green-main); font-weight: 600; }
+    .qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-light);
+      font-weight: 700;
+    }
+    .checkout-summary {
+      background: var(--bg-soft);
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .summary-row.total {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--green-main);
+      border-top: 1px solid var(--border-light);
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+
+    footer {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--border-light);
+      padding: 40px 24px;
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 860px) {
+      .product-grid, .tier-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { display: none; }
+      .slide-content h1 { font-size: 26px; }
+    }
+    @media (max-width: 560px) {
+      .product-grid, .tier-grid { grid-template-columns: 1fr; }
+      .slider-wrapper { height: 380px; }
+      .slide-content { padding: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-banner">
+    <span>MEMBERSHIP</span> 신규 회원가입 즉시 환영 포인트 3,000P 지급 + 등급별 최대 10% 적립!
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-badge"></span> GREENBITE
+      </div>
+      <nav class="nav-links">
+        <a href="#membership">멤버십 등급혜택</a>
+        <a href="#catalog">국가별 스낵</a>
+        <a href="#catalog" onclick="filterCountry('유럽')">유럽 디저트</a>
+        <a href="#catalog" onclick="filterCountry('아시아')">아시아 스낵</a>
+      </nav>
+      <div class="user-actions" id="userActions">
+        <!-- JS에서 로그인 상태에 따라 렌더링 -->
+      </div>
+    </div>
+  </header>
+
+  <!-- 히어로 이미지 슬라이더 (4장 교차) -->
+  <section class="hero-section">
+    <div class="slider-wrapper" id="heroSlider">
+      <div class="slide active">
+        <img src="img/hero1.jpg" alt="세계 과자 큐레이션" />
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <span class="slide-badge">WORLD SNACK CURATION</span>
+          <h1>식탁 위에서 떠나는<br>가장 달콤한 세계 여행</h1>
+          <p>일본 교토 말차부터 프랑스 노르망디 버터 쿠키까지, 현지에서만 맛보던 프리미엄 스낵을 집에서 만나보세요.</p>
+          <button class="btn-primary" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">인기 스낵 둘러보기</button>
+        </div>
+      </div>
+      <div class="slide">
+        <img src="img/hero2.jpg" alt="유럽 프리미엄 디저트" />
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <span class="slide-badge">EUROPEAN PATISSERIE</span>
+          <h1>프랑스·벨기에 정통<br>부티크 디저트 컬렉션</h1>
+          <p>깊은 풍미의 다크 카카오 트러플과 바삭한 아티장 비스킷으로 오후의 티타임을 완성하세요.</p>
+          <button class="btn-primary" onclick="filterCountry('유럽'); document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">유럽관 바로가기</button>
+        </div>
+      </div>
+      <div class="slide">
+        <img src="img/hero3.jpg" alt="일본 말차 & 디저트" />
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <span class="slide-badge">KYOTO MATCHA SPECIAL</span>
+          <h1>진하고 쌉싸름한<br>교토 우지 말차 기획전</h1>
+          <p>첫 수확 찻잎으로 만든 프리미엄 말차 샌드와 모찌 디저트를 특별 적립 혜택으로 만나보세요.</p>
+          <button class="btn-primary" onclick="filterCountry('아시아'); document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">아시아관 바로가기</button>
+        </div>
+      </div>
+      <div class="slide">
+        <img src="img/hero4.jpg" alt="아메리칸 크런치 스낵" />
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <span class="slide-badge">AMERICAN CRUNCH PARTY</span>
+          <h1>멈출 수 없는 바삭함<br>시애틀 수제 카라멜 팝콘</h1>
+          <p>천일염과 리얼 버터 카라멜을 입힌 수제 스낵 라인업이 새롭게 입고되었습니다.</p>
+          <button class="btn-primary" onclick="filterCountry('아메리카'); document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">아메리카관 바로가기</button>
+        </div>
+      </div>
+
+      <div class="slider-controls" id="sliderDots">
+        <button class="dot active" onclick="goToSlide(0)" aria-label="슬라이드 1"></button>
+        <button class="dot" onclick="goToSlide(1)" aria-label="슬라이드 2"></button>
+        <button class="dot" onclick="goToSlide(2)" aria-label="슬라이드 3"></button>
+        <button class="dot" onclick="goToSlide(3)" aria-label="슬라이드 4"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 회원 등급별 포인트 제도 안내 -->
+  <section class="section" id="membership">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">GREENBITE 회원 등급 & 포인트 시스템</h2>
+        <p class="section-sub">누적 구매 금액에 따라 등급이 자동 승급되며, 결제 시 더 높은 포인트가 적립됩니다.</p>
+      </div>
+    </div>
+    <div class="tier-grid">
+      <div class="tier-card">
+        <div class="tier-name">🌱 새싹 (SPROUT) <span class="tier-rate">2% 적립</span></div>
+        <p class="tier-desc">가입 즉시 부여되는 기본 등급입니다. 환영 포인트 3,000P가 즉시 지급됩니다.</p>
+      </div>
+      <div class="tier-card">
+        <div class="tier-name">🌿 리프 (LEAF) <span class="tier-rate">5% 적립</span></div>
+        <p class="tier-desc">누적 결제 30,000원 이상 달성 시 승급! 매 주문마다 결제 금액의 5%가 적립됩니다.</p>
+      </div>
+      <div class="tier-card highlight">
+        <div class="tier-name">🌳 포레스트 (FOREST) <span class="tier-rate">10% 적립</span></div>
+        <p class="tier-desc">누적 결제 70,000원 이상 VIP 등급! 업계 최고 수준 10% 포인트 적립 혜택을 드립니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 상품 목록 섹션 -->
+  <section class="section" id="catalog">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">국가별 베스트 스낵</h2>
+        <p class="section-sub">원하는 대륙을 선택해 현지 직수입 인기 과자를 장바구니에 담아보세요.</p>
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="tab-btn active" onclick="filterCountry('전체')">전체보기</button>
+        <button class="tab-btn" onclick="filterCountry('아시아')">아시아 (일본)</button>
+        <button class="tab-btn" onclick="filterCountry('유럽')">유럽 (프랑스·벨기에·스페인·이탈리아)</button>
+        <button class="tab-btn" onclick="filterCountry('아메리카')">아메리카 (미국)</button>
+      </div>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- JS로 상품 카드 렌더링 -->
+    </div>
+  </section>
+
+  <!-- 회원가입 / 로그인 모달 -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="authModalTitle">회원가입 (3,000P 즉시 증정)</h3>
+        <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
+      </div>
+      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group">
+          <label>이름 (닉네임)</label>
+          <input type="text" id="userNameInput" placeholder="예: 주시은" required />
+        </div>
+        <div class="form-group">
+          <label>이메일 아이디</label>
+          <input type="email" id="userEmailInput" placeholder="example@greenbite.kr" required />
+        </div>
+        <div class="form-group">
+          <label>시작 등급 체험 선택 (데모용 즉시 적용 가능)</label>
+          <select id="userTierSelect">
+            <option value="SPROUT">🌱 새싹 (기본 가입 · 적립률 2% · 3,000P 증정)</option>
+            <option value="LEAF">🌿 리프 (실버 등급 체험 · 적립률 5% · 5,000P 증정)</option>
+            <option value="FOREST">🌳 포레스트 (VIP 등급 체험 · 적립률 10% · 10,000P 증정)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; padding:12px; font-size:15px; margin-top:8px;">
+          가입 완료 및 포인트 받기
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 장바구니 & 결제 모달 -->
+  <div class="modal-backdrop" id="cartModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>장바구니 & 포인트 결제</h3>
+        <button class="close-btn" onclick="closeModal('cartModal')">&times;</button>
+      </div>
+      <div id="cartItemsContainer"></div>
+
+      <div class="checkout-summary" id="checkoutSection" style="display:none;">
+        <div class="summary-row">
+          <span>상품 합계</span>
+          <span id="subtotalText">0원</span>
+        </div>
+        <div class="summary-row" style="align-items:center;">
+          <span>포인트 사용 (<strong id="availPointText">0</strong>P 보유)</span>
+          <input type="number" id="usePointInput" min="0" value="0" oninput="updateCheckoutCalc()" style="width:110px; padding:5px 8px; border:1px solid #ccc; border-radius:6px; text-align:right;" />
+        </div>
+        <div class="summary-row">
+          <span>결제 방법</span>
+          <select id="payMethodSelect" style="padding:5px 8px; border:1px solid #ccc; border-radius:6px;">
+            <option value="카드결제">신용/체크카드 간편결제</option>
+            <option value="카카오페이">카카오페이</option>
+            <option value="네이버페이">네이버페이</option>
+          </select>
+        </div>
+        <div class="summary-row" style="color:var(--green-main); font-weight:600;">
+          <span id="earnRateLabel">예상 적립 포인트 (2%)</span>
+          <span id="earnPointText">+0P</span>
+        </div>
+        <div class="summary-row total">
+          <span>최종 결제 금액</span>
+          <span id="finalPriceText">0원</span>
+        </div>
+        <button class="btn-primary" style="width:100%; padding:13px; font-size:15px; margin-top:12px;" onclick="processPayment()">
+          결제하기 및 포인트 적립
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>GREENBITE (그린바이트)</strong> | 전 세계 프리미엄 스낵 큐레이션 온라인 스토어</p>
+    <p style="margin-top:6px;">© 2026 GREENBITE Inc. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // 상품 데이터 (img 폴더의 6개 이미지 매칭)
+    const PRODUCTS = [
+      { id: 1, region: '아시아', country: '🇯🇵 일본', name: '교토 우지 말차 크림 샌드', desc: '첫 수확 찻잎으로 만든 진한 말차 크림과 바삭한 랑그드샤 쿠키', price: 12800, img: 'img/prod1.jpg' },
+      { id: 2, region: '유럽', country: '🇫🇷 프랑스', name: '노르망디 버터 사블레 틴케이스', desc: '발효 버터의 깊은 풍미가 살아있는 정통 프렌치 쇼트브레드', price: 16500, img: 'img/prod2.jpg' },
+      { id: 3, region: '유럽', country: '🇧🇪 벨기에', name: '브뤼셀 다크 카카오 트러플', desc: '벨기에산 72% 다크 초콜릿과 부드러운 가나슈의 조화', price: 14900, img: 'img/prod3.jpg' },
+      { id: 4, region: '아메리카', country: '🇺🇸 미국', name: '시애틀 씨솔트 카라멜 팝콘', desc: '단짠의 정석! 천일염과 수제 버터 카라멜을 입힌 크런치 팝콘', price: 8900, img: 'img/prod4.jpg' },
+      { id: 5, region: '유럽', country: '🇪🇸 스페인', name: '마드리드 시나몬 츄러스 크리스프', desc: '스페인 전통 츄러스의 바삭함과 향긋한 시나몬 슈가 스낵', price: 9500, img: 'img/prod5.jpg' },
+      { id: 6, region: '유럽', country: '🇮🇹 이탈리아', name: '시칠리아 피스타치오 웨하스', desc: '고소한 이탈리아산 피스타치오 크림이 4겹으로 채워진 웨하스', price: 11200, img: 'img/prod6.jpg' }
+    ];
+
+    // 등급 정보
+    const TIER_INFO = {
+      SPROUT: { label: '🌱 새싹', rate: 0.02, rateText: '2%' },
+      LEAF: { label: '🌿 리프', rate: 0.05, rateText: '5%' },
+      FOREST: { label: '🌳 포레스트', rate: 0.10, rateText: '10%' }
+    };
+
+    // 상태 관리 (localStorage 연동)
+    let currentUser = JSON.parse(localStorage.getItem('gb_user')) || null;
+    let cart = JSON.parse(localStorage.getItem('gb_cart')) || [];
+    let currentFilter = '전체';
+
+    // 히어로 슬라이더 로직 (4장 자동 교차)
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+
+    function goToSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide = (index + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    setInterval(() => {
+      goToSlide(currentSlide + 1);
+    }, 4500);
+
+    // 상단 유저 영역 렌더링
+    function renderUserHeader() {
+      const container = document.getElementById('userActions');
+      const cartCount = cart.reduce((acc, item) => acc + item.qty, 0);
+
+      if (currentUser) {
+        const tier = TIER_INFO[currentUser.tier];
+        container.innerHTML = `
+          <div class="member-pill">
+            <span class="tier-tag">${tier.label}</span>
+            <span>${currentUser.name}님</span>
+            <strong>${currentUser.points.toLocaleString()}P</strong>
+          </div>
+          <button class="btn-outline" onclick="openCartModal()">장바구니 (${cartCount})</button>
+          <button class="btn-outline" style="border-color:#ccc; color:#666;" onclick="logout()">로그아웃</button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button class="btn-outline" onclick="openCartModal()">장바구니 (${cartCount})</button>
+          <button class="btn-primary" onclick="openModal('authModal')">회원가입 / 로그인</button>
+        `;
+      }
+    }
+
+    // 상품 목록 렌더링
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      const filtered = currentFilter === '전체'
+        ? PRODUCTS
+        : PRODUCTS.filter(p => p.region === currentFilter);
+
+      const rate = currentUser ? TIER_INFO[currentUser.tier].rate : 0.02;
+
+      grid.innerHTML = filtered.map(p => {
+        const earnPts = Math.floor(p.price * rate);
+        return `
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <img src="${p.img}" alt="${p.name}" />
+              <span class="country-badge">${p.country}</span>
+            </div>
+            <div class="product-info">
+              <div class="product-title">${p.name}</div>
+              <div class="product-desc">${p.desc}</div>
+              <div class="product-bottom">
+                <div class="price-box">
+                  <span class="price">${p.price.toLocaleString()}원</span>
+                  <span class="point-hint">구매 시 +${earnPts.toLocaleString()}P 적립</span>
+                </div>
+                <button class="btn-primary" onclick="addToCart(${p.id})">담기</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterCountry(region) {
+      currentFilter = region;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.includes(region) || (region === '전체' && btn.textContent === '전체보기'));
+      });
+      renderProducts();
+    }
+
+    // 회원가입 처리
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('userNameInput').value.trim();
+      const email = document.getElementById('userEmailInput').value.trim();
+      const tier = document.getElementById('userTierSelect').value;
+
+      const initialPoints = tier === 'FOREST' ? 10000 : (tier === 'LEAF' ? 5000 : 3000);
+      const initialSpent = tier === 'FOREST' ? 70000 : (tier === 'LEAF' ? 30000 : 0);
+
+      currentUser = { name, email, tier, points: initialPoints, totalSpent: initialSpent };
+      localStorage.setItem('gb_user', JSON.stringify(currentUser));
+
+      closeModal('authModal');
+      renderUserHeader();
+      renderProducts();
+      alert(`${name}님 환영합니다! [${TIER_INFO[tier].label}] 등급 및 ${initialPoints.toLocaleString()}P가 지급되었습니다.`);
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('gb_user');
+      renderUserHeader();
+      renderProducts();
+    }
+
+    // 장바구니 기능
+    function addToCart(productId) {
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id: productId, qty: 1 });
+      }
+      saveCart();
+      renderUserHeader();
+      alert('장바구니에 스낵이 담겼습니다!');
+    }
+
+    function changeQty(productId, delta) {
+      const idx = cart.findIndex(item => item.id === productId);
+      if (idx === -1) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      saveCart();
+      renderUserHeader();
+      renderCartModal();
+    }
+
+    function saveCart() {
+      localStorage.setItem('gb_cart', JSON.stringify(cart));
+    }
+
+    function openCartModal() {
+      renderCartModal();
+      openModal('cartModal');
+    }
+
+    function renderCartModal() {
+      const container = document.getElementById('cartItemsContainer');
+      const checkoutSec = document.getElementById('checkoutSection');
+
+      if (cart.length === 0) {
+        container.innerHTML = `<p style="text-align:center; padding:32px 0; color:var(--text-muted);">장바구니가 비어 있습니다. 맛있는 세계 과자를 담아보세요!</p>`;
+        checkoutSec.style.display = 'none';
+        return;
+      }
+
+      checkoutSec.style.display = 'block';
+      container.innerHTML = cart.map(item => {
+        const p = PRODUCTS.find(prod => prod.id === item.id);
+        return `
+          <div class="cart-item">
+            <img src="${p.img}" alt="${p.name}" />
+            <div class="cart-item-info">
+              <div class="cart-item-title">${p.name}</div>
+              <div class="cart-item-price">${(p.price * item.qty).toLocaleString()}원</div>
+            </div>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button>
+              <span>${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('availPointText').textContent = currentUser ? currentUser.points.toLocaleString() : '0';
+      document.getElementById('usePointInput').value = 0;
+      updateCheckoutCalc();
+    }
+
+    function updateCheckoutCalc() {
+      const subtotal = cart.reduce((sum, item) => {
+        const p = PRODUCTS.find(prod => prod.id === item.id);
+        return sum + p.price * item.qty;
+      }, 0);
+
+      const maxPts = currentUser ? currentUser.points : 0;
+      let usePts = parseInt(document.getElementById('usePointInput').value) || 0;
+      if (usePts < 0) usePts = 0;
+      if (usePts > maxPts) usePts = maxPts;
+      if (usePts > subtotal) usePts = subtotal;
+      document.getElementById('usePointInput').value = usePts;
+
+      const finalPrice = subtotal - usePts;
+      const tier = currentUser ? TIER_INFO[currentUser.tier] : TIER_INFO.SPROUT;
+      const earnPts = Math.floor(finalPrice * tier.rate);
+
+      document.getElementById('subtotalText').textContent = `${subtotal.toLocaleString()}원`;
+      document.getElementById('earnRateLabel').textContent = `예상 적립 포인트 (${tier.label} ${tier.rateText})`;
+      document.getElementById('earnPointText').textContent = `+${earnPts.toLocaleString()}P`;
+      document.getElementById('finalPriceText').textContent = `${finalPrice.toLocaleString()}원`;
+    }
+
+    function processPayment() {
+      if (!currentUser) {
+        alert('포인트 적립 및 결제를 위해 먼저 회원가입을 진행해주세요!');
+        closeModal('cartModal');
+        openModal('authModal');
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => {
+        const p = PRODUCTS.find(prod => prod.id === item.id);
+        return sum + p.price * item.qty;
+      }, 0);
+      const usePts = parseInt(document.getElementById('usePointInput').value) || 0;
+      const finalPrice = subtotal - usePts;
+      const method = document.getElementById('payMethodSelect').value;
+
+      const currentTier = TIER_INFO[currentUser.tier];
+      const earnedPts = Math.floor(finalPrice * currentTier.rate);
+
+      // 포인트 차감 및 적립, 누적금액 갱신
+      currentUser.points = currentUser.points - usePts + earnedPts;
+      currentUser.totalSpent += finalPrice;
+
+      // 자동 등급 승급 체크
+      let upgradeMsg = '';
+      if (currentUser.totalSpent >= 70000 && currentUser.tier !== 'FOREST') {
+        currentUser.tier = 'FOREST';
+        upgradeMsg = '\n🎉 축하합니다! 누적 구매 7만원 돌파로 [🌳 포레스트(10% 적립)] 등급으로 승급되었습니다!';
+      } else if (currentUser.totalSpent >= 30000 && currentUser.tier === 'SPROUT') {
+        currentUser.tier = 'LEAF';
+        upgradeMsg = '\n🎉 축하합니다! 누적 구매 3만원 돌파로 [🌿 리프(5% 적립)] 등급으로 승급되었습니다!';
+      }
+
+      localStorage.setItem('gb_user', JSON.stringify(currentUser));
+      cart = [];
+      saveCart();
+
+      closeModal('cartModal');
+      renderUserHeader();
+      renderProducts();
+
+      alert(`[${method}] ${finalPrice.toLocaleString()}원 결제가 완료되었습니다!\n• 적립 포인트: +${earnedPts.toLocaleString()}P\n• 현재 보유 포인트: ${currentUser.points.toLocaleString()}P${upgradeMsg}`);
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // 초기 실행
+    renderUserHeader();
+    renderProducts();
+  </script>
+</body>
+</html>
